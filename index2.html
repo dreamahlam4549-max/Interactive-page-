@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>درس تفاعلي: التعاملات عبر الإنترنت</title>
+<style>
+:root{--navy:#123448;--teal:#b9e2e1;--yellow:#f1ef9b;--ink:#20313a;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f5f8f8;color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.8}
+header{background:linear-gradient(125deg,var(--navy),#286b73);color:white;padding:28px 18px;text-align:center}
+header h1{margin:5px 0;font-size:clamp(24px,4vw,38px)}header p{margin:5px}
+main{max-width:900px;margin:20px auto;padding:0 14px}.progress{height:8px;background:#dce8e8;border-radius:9px;overflow:hidden;margin:12px 0 22px}.bar{height:100%;width:0;background:#e9c84d;transition:.3s}
+.panel{background:white;border-radius:18px;padding:clamp(18px,4vw,32px);box-shadow:0 6px 24px #12344812;margin-bottom:16px}
+h2{color:var(--navy);margin-top:0}.tag{display:inline-block;background:var(--yellow);padding:4px 12px;border-radius:30px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.choice,button{font:inherit;cursor:pointer;border:2px solid #d8e5e5;border-radius:12px;padding:12px 16px;background:#fff;color:var(--ink);transition:.15s}.choice:hover,button:hover{border-color:#438b8d;background:#f0fbfa}.choice.selected{border-color:#287d7e;background:#e4f5f3}.choice.correct{border-color:#27854a;background:#e9f8ed}.choice.wrong{border-color:#bd4545;background:#fff0f0}
+button.primary{background:var(--navy);color:white;border-color:var(--navy)}button:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.feedback{margin-top:14px;padding:12px;border-radius:10px;display:none}.feedback.show{display:block}.good{background:#e8f7ed;color:#185b31}.bad{background:#fff3df;color:#7b4a00}
+.scenario{background:#f0f8f8;border-right:5px solid #3b9292;padding:14px;border-radius:8px;margin:12px 0}
+footer{text-align:center;color:#607178;padding:20px;font-size:13px}.score{font-size:22px;color:#176b45;font-weight:bold}
+</style></head>
+<body>
+<header><span class="tag">مهارات رقمية • المرحلة المتوسطة</span><h1>التعاملات عبر الإنترنت</h1><p>الوحدة الثالثة: التجارة الإلكترونية</p><p>تعلّمي، اختاري، واكتشفي الإجابة بنفسك!</p></header>
+<main>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<section class="panel" id="lesson">
+<span class="tag" id="stepLabel">المحطة 1 من 5</span>
+<h2 id="title">تهيئة: هل التسوق عبر الإنترنت آمن دائمًا؟</h2>
+<div id="content"></div>
+<div class="actions"><button id="back" onclick="move(-1)">السابق</button><button class="primary" id="next" onclick="move(1)">ابدئي النشاط التالي ←</button></div>
+</section>
+<section class="panel">
+<h2>🎯 تحدّي سريع</h2><p>اختبري فهمك في مواقف من الحياة اليومية. اختاري الإجابة ثم اضغطي «تحقّق».</p>
+<div class="scenario"><strong>الموقف:</strong> وصلتك رسالة تقول: «فزتِ بجائزة، أدخلي كلمة المرور ورمز التحقق فورًا لاستلامها».</div>
+<div class="grid" id="challengeChoices">
+<button class="choice" onclick="challenge(this,false)">أدخل البيانات بسرعة حتى لا تضيع الجائزة</button>
+<button class="choice" onclick="challenge(this,true)">أتجاهل الرابط ولا أشارك كلمة المرور أو رمز التحقق</button>
+<button class="choice" onclick="challenge(this,false)">أرسل الرسالة إلى صديقاتي للتجربة</button>
+</div><div id="challengeFeedback" class="feedback"></div>
+</section>
+<section class="panel">
+<h2>🏆 التقويم الختامي</h2><p id="qText"></p><div class="grid" id="quizChoices"></div>
+<div class="actions"><button class="primary" onclick="checkQuiz()">تحقّق من الإجابة</button><button onclick="nextQuiz()">السؤال التالي</button></div>
+<div id="quizFeedback" class="feedback"></div><p id="score" class="score"></p>
+</section>
+</main><footer>إعداد نشاط تفاعلي مكمّل لعرض درس «التعاملات عبر الإنترنت»</footer>
+<script>
+const slides=[
+{title:"تهيئة: هل التسوق عبر الإنترنت آمن دائمًا؟",body:`<p>تخيّلي أنكِ تريدين شراء حقيبة من متجر إلكتروني. قبل الدفع، ما أول شيء يجب التأكد منه؟</p><div class="grid"><button class="choice" onclick="reveal(this,'نبحث عن موثوقية المتجر وأمان الاتصال وطرق التواصل قبل الشراء.')">لون الحقيبة فقط</button><button class="choice" onclick="reveal(this,'صحيح! نتحقق من موثوقية المتجر وأمان الاتصال وطرق التواصل قبل الشراء.')">موثوقية المتجر وأمان الاتصال</button><button class="choice" onclick="reveal(this,'السعر وحده لا يكفي للحكم على موثوقية المتجر.')">أن السعر هو الأرخص فقط</button></div><div class="feedback" id="inlineFeedback"></div>`},
+{title:"المحطة 2: التعاملات الآمنة عبر الإنترنت",body:`<p>قبل إتمام عملية شراء إلكترونية، تحققي من مؤشرات الأمان والثقة، واقرئي تفاصيل المنتج وسياسة الاسترجاع، ولا تشاركي معلوماتك السرية.</p><div class="scenario"><strong>اختاري التصرف الأكثر أمانًا:</strong></div><div class="grid"><button class="choice" onclick="reveal(this,'صحيح! افحصي عنوان الموقع وموثوقية المتجر قبل إدخال البيانات.')">أفحص الموقع وموثوقية المتجر قبل الدفع</button><button class="choice" onclick="reveal(this,'لا تدخلي بياناتك في متجر مجهول لمجرد وجود تخفيض كبير.')">أشتري فورًا بسبب التخفيض الكبير</button><button class="choice" onclick="reveal(this,'لا تشاركي رمز التحقق أو كلمة المرور مع أي شخص.')">أرسل رمز التحقق للبائع في المحادثة</button></div><div class="feedback" id="inlineFeedback"></div>`},
+{title:"المحطة 3: إشارات الثقة في المتاجر",body:`<p>تأكدي من عنوان الموقع، ووجود معلومات واضحة عن المتجر ووسائل التواصل وسياسات الشحن والاسترجاع، واستخدمي طرق دفع موثوقة.</p><p><strong>نشاط تصنيف:</strong> اضغطي على كل بطاقة لعرض التصنيف.</p><div class="grid"><button class="choice" onclick="reveal(this,'إشارة إيجابية: معلومات واضحة يمكن التحقق منها.')">معلومات تواصل وسياسة استرجاع واضحة</button><button class="choice" onclick="reveal(this,'إشارة تحذير: لا تثقي بوعود الجوائز أو التخفيضات غير المنطقية.')">تخفيض هائل مع طلب بيانات سرية</button><button class="choice" onclick="reveal(this,'إشارة إيجابية نسبيًا، لكنها لا تكفي وحدها؛ افحصي المتجر أيضًا.')">اتصال مشفّر بالموقع</button></div><div class="feedback" id="inlineFeedback"></div>`},
+{title:"المحطة 4: اكتشاف الاحتيال الإلكتروني",body:`<p>من علامات الاحتيال: الاستعجال والتهديد، الجوائز غير المتوقعة، الروابط المشبوهة، وطلب كلمات المرور أو رموز التحقق.</p><div class="scenario">وصلتك رسالة من عنوان غريب تطلب تحديث بيانات بطاقتك عبر رابط. ماذا تفعلين؟</div><div class="grid"><button class="choice" onclick="reveal(this,'صحيح! لا تفتحي الرابط، وتحققي من الجهة عبر قنواتها الرسمية.')">لا أفتح الرابط وأتحقق من القناة الرسمية</button><button class="choice" onclick="reveal(this,'فتح الروابط المشبوهة وإدخال البيانات قد يعرّض معلوماتك للخطر.')">أدخل بيانات البطاقة لتجنب إيقافها</button><button class="choice" onclick="reveal(this,'لا تعيدي إرسال الروابط المشبوهة؛ نبّهي الآخرين دون نشرها.')">أعيد إرسال الرابط للجميع</button></div><div class="feedback" id="inlineFeedback"></div>`},
+{title:"المحطة 5: إنشاء حساب في متجر إلكتروني",body:`<p>عند إنشاء حساب، استخدمي كلمة مرور قوية وفريدة، وبيانات لازمة فقط، وفعّلي التحقق الإضافي إذا توفر. لا تشاركي كلمة المرور أو رموز التحقق.</p><div class="scenario"><strong>مهمتك:</strong> حددي ثلاث عادات صحيحة.</div><div class="grid"><button class="choice" onclick="toggle(this)">استخدام كلمة مرور قوية وفريدة</button><button class="choice" onclick="toggle(this)">مشاركة كلمة المرور مع صديقة</button><button class="choice" onclick="toggle(this)">التأكد من عنوان المتجر الرسمي</button><button class="choice" onclick="toggle(this)">عدم مشاركة رمز التحقق</button></div><div class="feedback show good">اختاري العادات الآمنة الثلاث، ثم انتقلي إلى التقويم الختامي.</div>`}
+];
+let current=0;
+function render(){document.getElementById('stepLabel').textContent=`المحطة ${current+1} من ${slides.length}`;document.getElementById('title').textContent=slides[current].title;document.getElementById('content').innerHTML=slides[current].body;document.getElementById('bar').style.width=((current+1)/slides.length*100)+'%';document.getElementById('back').disabled=current===0;document.getElementById('next').textContent=current===slides.length-1?'العودة إلى البداية ↺':'المحطة التالية ←';}
+function move(n){current+=n;if(current>=slides.length)current=0;if(current<0)current=0;render()}
+function reveal(btn,msg){let box=btn.parentElement.nextElementSibling;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');box.textContent=msg;box.className='feedback show '+(msg.startsWith('صحيح')||msg.startsWith('إشارة إيجابية')?'good':'bad')}
+function toggle(btn){btn.classList.toggle('selected')}
+function challenge(btn,ok){document.querySelectorAll('#challengeChoices button').forEach(b=>b.classList.remove('correct','wrong'));btn.classList.add(ok?'correct':'wrong');let f=document.getElementById('challengeFeedback');f.textContent=ok?'أحسنتِ! لا تشاركي كلمة المرور أو رمز التحقق، وتحققي من أي رسالة عبر القنوات الرسمية.':'حاولي مرة أخرى: الجوائز المفاجئة وطلب البيانات السرية من علامات الاحتيال.';f.className='feedback show '+(ok?'good':'bad')}
+const qs=[
+{q:'أي مما يلي يُعد علامة تحذير من الاحتيال؟',a:['طلب رمز التحقق عبر رسالة مجهولة','وجود سياسة استرجاع واضحة','عرض بيانات التواصل الرسمية'],c:0,e:'الجهات الموثوقة لا تطلب منك مشاركة رمز التحقق عبر رسالة مجهولة.'},
+{q:'ما التصرف الصحيح قبل الدفع في متجر إلكتروني؟',a:['الاعتماد على السعر فقط','التحقق من موثوقية المتجر وعنوان الموقع','إرسال كلمة المرور للبائع'],c:1,e:'تحققي من موثوقية المتجر وعنوان الموقع قبل إدخال بيانات الدفع.'},
+{q:'كيف نحمي حساب المتجر الإلكتروني؟',a:['استخدام كلمة مرور قوية وفريدة','مشاركة كلمة المرور مع الصديقات','استخدام الرابط الذي يصل من أي مرسل'],c:0,e:'استخدمي كلمة مرور قوية وفريدة ولا تشاركيها مع أحد.'},
+{q:'ما المقصود بالتعامل الآمن عند الشك في رابط؟',a:['فتحه فورًا','إدخال بيانات البطاقة للتجربة','عدم فتحه والتحقق من الجهة رسميًا'],c:2,e:'لا تفتحي الرابط المشبوه؛ تحققي من الجهة عبر موقعها أو قنواتها الرسمية.'},
+{q:'أي معلومة يجب عدم مشاركتها مع الآخرين؟',a:['اسم المنتج','رمز التحقق وكلمة المرور','وصف المنتج العام'],c:1,e:'رموز التحقق وكلمات المرور معلومات سرية.'}
+];let qi=0,score=0,answered={};
+function loadQuiz(){let q=qs[qi];document.getElementById('qText').textContent=`السؤال ${qi+1} من ${qs.length}: ${q.q}`;let el=document.getElementById('quizChoices');el.innerHTML='';q.a.forEach((a,i)=>{let b=document.createElement('button');b.className='choice';b.textContent=a;b.onclick=()=>{el.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.answer=i};el.appendChild(b)});document.getElementById('quizFeedback').className='feedback';document.getElementById('quizFeedback').textContent='';}
+function checkQuiz(){if(answered[qi]!==undefined){return}let selected=document.querySelector('#quizChoices .selected');if(!selected){let f=document.getElementById('quizFeedback');f.textContent='اختاري إجابة أولًا.';f.className='feedback show bad';return}let ans=Number(selected.dataset.answer),q=qs[qi];answered[qi]=ans;if(ans===q.c){score++;selected.classList.add('correct')}else selected.classList.add('wrong');let f=document.getElementById('quizFeedback');f.textContent=(ans===q.c?'إجابة صحيحة! ':'ليست الإجابة الصحيحة. ')+q.e;f.className='feedback show '+(ans===q.c?'good':'bad');document.getElementById('score').textContent=`نتيجتك حتى الآن: ${score} من ${Object.keys(answered).length}`;}
+function nextQuiz(){
+  if(qi<qs.length-1){
+    qi++;
+    loadQuiz();
+  } else {
+    document.getElementById('qText').textContent=`انتهى التقويم! نتيجتك: ${score} من ${qs.length}`;
+    const choices=document.getElementById('quizChoices');
+    choices.innerHTML='';
+    const restart=document.createElement('button');
+    restart.className='primary';
+    restart.textContent='إعادة الاختبار';
+    restart.onclick=()=>{qi=0;score=0;answered={};document.getElementById('score').textContent='';loadQuiz();};
+    choices.appendChild(restart);
+    document.getElementById('quizFeedback').textContent='راجعي المحطات السابقة إذا رغبتِ في تثبيت المعلومات.';
+    document.getElementById('quizFeedback').className='feedback show good';
+  }
+}
+render();loadQuiz();
+</script></body></html>
